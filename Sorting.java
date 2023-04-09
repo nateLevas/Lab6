@@ -35,7 +35,7 @@ public class Sorting {
         for (int i = 0; i < A.length - 1; i++) {
             for (int j = A.length - 1; j > i; j--) {
                 if ((A[j] < (A[j - 1]))) {
-                    DSutil.swap(A, j, j-1);
+                    swap(A, j, j-1);
                 }
             }
         }
@@ -55,7 +55,7 @@ public class Sorting {
     public static void insertionSort (int[] A) {
         for (int i=1; i<A.length; i++) // Insert i’th item
             for (int j=i; (j>0) && (A[j] < (A[j-1])); j--)
-                DSutil.swap(A, j, j-1);
+                swap(A, j, j-1);
     }
 
     public static void mergeSort(int[] A) {
@@ -93,10 +93,10 @@ public class Sorting {
 
     private static void quickSortHelp (int[] A, int i, int j) {
         int pivotindex = findpivot(A, i, j); // Pick a pivot
-        DSutil.swap(A, pivotindex, j);       // Stick pivot at end
+        swap(A, pivotindex, j);       // Stick pivot at end
         // k will be the first position in the right subarray
         int k = partition(A, i-1, j, A[j]);
-        DSutil.swap(A, k, j);              // Put pivot in place
+        swap(A, k, j);              // Put pivot in place
         if ((k-i) > 1) quickSortHelp(A, i, k-1);   // Sort left partition
         if ((j-k) > 1) quickSortHelp(A, k+1, j);   // Sort right partition
     }
@@ -105,14 +105,20 @@ public class Sorting {
         do {                 // Move bounds inward until they meet
             while (A[++l] < (pivot));
             while ((r!=0) && (A[--r] > pivot));
-            DSutil.swap(A, l, r);       // Swap out-of-place values
+            swap(A, l, r);       // Swap out-of-place values
         } while (l < r);              // Stop when they cross
-        DSutil.swap(A, l, r);         // Reverse last, wasted swap
+        swap(A, l, r);         // Reverse last, wasted swap
         return l;      // Return first position in right partition
     }
 
     static int findpivot(int[] A, int i, int j)
     { return (i+j)/2; }
+
+    public static <E> void swap(int[] A, int p1, int p2) {
+        int temp = A[p1];
+        A[p1] = A[p2];
+        A[p2] = temp;
+    }
 
 
 

@@ -26,20 +26,94 @@ import java.util.Random;
 import java.util.Stack;
 public class Sorting {
 
-    private static void bubbleSort (int[] array) {
+    public static void defaultSort (int[] A) {
+        Arrays.sort(A);
     }
 
-    private static void selectionSort (int[] array) {
+    //Adapted from 2/28 in class slideshow
+    public static void bubbleSort (int[] A) {
+        for (int i = 0; i < A.length - 1; i++) {
+            for (int j = A.length - 1; j > i; j--) {
+                if ((A[j] < (A[j - 1]))) {
+                    DSutil.swap(A, j, j-1);
+                }
+            }
+        }
     }
 
-    private static void insertionSort (int[] array) {
+    //Adapted from 2/28 in class slideshow
+    public static void selectionSort (int[] A) {
+        for (int i=0; i<A.length-1; i++) { // Get i-th item
+            int lowindex = i; // Remember it
+            for (int j=A.length-1; j>i; j--) // Find min
+                if (A[j] < (A[lowindex]))
+                    lowindex = j; // Put it in placeDSutil.swap(A, i, lowindex);
+        }
     }
 
-    private static void mergeSort (int[] array) {
+    //Adapted from 2/28 in class slideshow
+    public static void insertionSort (int[] A) {
+        for (int i=1; i<A.length; i++) // Insert i’th item
+            for (int j=i; (j>0) && (A[j] < (A[j-1])); j--)
+                DSutil.swap(A, j, j-1);
     }
 
-    private static void quickSort (int[] array) {
+    public static void mergeSort(int[] A) {
+        int[] temp = new int[A.length];
+        mergeSortHelp(A,temp, 0, A.length - 1);
+
     }
+
+
+
+    public static <E> void quickSort (int[] A) {
+        quickSortHelp(A, 0, A.length - 1);
+    }
+
+    //Adapted from 3/2 attached code
+    private static void mergeSortHelp (int[] A, int[] temp, int l, int r) {
+        int mid = (l+r)/2;                // Select midpoint
+        if (l == r) return;               // List has one element
+        mergeSortHelp(A, temp, l, mid);   // Mergesort first half
+        mergeSortHelp(A, temp, mid+1, r); // Mergesort second half
+        for (int i=l; i<=r; i++)          // Copy subarray to temp
+            temp[i] = A[i];
+        // Do the merge operation back to A
+        int i1 = l; int i2 = mid + 1;
+        for (int curr=l; curr<=r; curr++) {
+            if (i1 == mid+1)              // Left sublist exhausted
+                A[curr] = temp[i2++];
+            else if (i2 > r)              // Right sublist exhausted
+                A[curr] = temp[i1++];
+            else if (temp[i1] < (temp[i2])) // Get smaller
+                A[curr] = temp[i1++];
+            else A[curr] = temp[i2++];
+        }
+    }
+
+    private static void quickSortHelp (int[] A, int i, int j) {
+        int pivotindex = findpivot(A, i, j); // Pick a pivot
+        DSutil.swap(A, pivotindex, j);       // Stick pivot at end
+        // k will be the first position in the right subarray
+        int k = partition(A, i-1, j, A[j]);
+        DSutil.swap(A, k, j);              // Put pivot in place
+        if ((k-i) > 1) quickSortHelp(A, i, k-1);   // Sort left partition
+        if ((j-k) > 1) quickSortHelp(A, k+1, j);   // Sort right partition
+    }
+
+    static int partition(int[] A, int l, int r, int pivot) {
+        do {                 // Move bounds inward until they meet
+            while (A[++l] < (pivot));
+            while ((r!=0) && (A[--r] > pivot));
+            DSutil.swap(A, l, r);       // Swap out-of-place values
+        } while (l < r);              // Stop when they cross
+        DSutil.swap(A, l, r);         // Reverse last, wasted swap
+        return l;      // Return first position in right partition
+    }
+
+    static int findpivot(int[] A, int i, int j)
+    { return (i+j)/2; }
+
 
 
  /**
@@ -112,7 +186,7 @@ public class Sorting {
             Stopwatch timer = new Stopwatch();
             switch (args[1]) {
                 case "0":
-                    Arrays.sort(arrays[i]);
+                    defaultSort(arrays[i]);
                     nameOfAlgorithm = "Arrays.sort()";
                     break;
                 case "1":
